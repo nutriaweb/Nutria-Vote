@@ -514,7 +514,7 @@ function renderGrid() {
           <polyline points="2,7 5.5,10.5 12,3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <div class="card-img-placeholder" style="background:${tagColor(p.tag)}">${p.img}</div>
+      <div class="card-img-placeholder" style="background:${tagColor(p.tag)}"> <img src="${p.img}" alt="${p.name}"> </div>
       <div class="card-body">
         <div class="card-tag">${p.tag}</div>
         <div class="card-title">${p.title}</div>
@@ -527,7 +527,7 @@ function renderGrid() {
 
 function tagColor(tag) {
   const map = {
-    Meals: '#1a3d2b', Drinks: '#1a3d2b', Snacks: '#1a3d2b',
+    Meals: '#fff', Drinks: '#fff', Snacks: '#fff',
   };
   return map[tag] || '#fff';
 }
