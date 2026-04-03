@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop — Our Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f4ef;
+    --surface: #ffffff;
+    --ink: #1a1a18;
+    --muted: #7a7a72;
+    --green-dark: #1a3d2b;
+    --border: #e2ddd6;
+    --radius: 14px;
+    --badge: #1a1a18;
+    --green-light:#4a8c60;
+    --gold:       #c37b52;
+    --cream:      #f5f0e8;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 48px 48px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--gold); }
+
+  .cart-btn {
+    position: relative;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+  }
+  .cart-btn:hover { background: var(--green-light); }
+
+  .cart-count {
+    background: var(--green-light);
+    color: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: transform 0.2s;
+  }
+  .cart-count.pop { transform: scale(1.4); }
+
+  /* ── HERO TEXT ── */
+  .hero {
+    padding: 40px 48px 32px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.1;
+    max-width: 520px;
+  }
+  .hero p {
+    margin-top: 12px;
+    color: var(--green-light);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 400px;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    padding: 0 48px 80px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.2s;
+    user-select: none;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.10);
+  }
+  .card.selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--cream), 0 16px 40px rgba(0,0,0,0.10);
+  }
+
+  .card-check {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    z-index: 2;
+  }
+  .card.selected .card-check {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .card-check svg { opacity: 0; transition: opacity 0.15s; }
+  .card.selected .card-check svg { opacity: 1; }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    background: var(--cream);
+  }
+
+  /* placeholder image pattern */
+  .card-img-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+  }
+
+  .card-body {
+    padding: 18px 20px 20px;
+  }
+
+  .card-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-light);
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .card-sub {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+
+  .card-price {
+    margin-top: 14px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  /* ── FLOATING BAR ── */
+  .float-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--ink);
+    color: #fff;
+    border-radius: 60px;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 100;
+    white-space: nowrap;
+  }
+  .float-bar.visible { transform: translateX(-50%) translateY(0); }
+
+  .float-bar-text { font-size: 0.9rem; font-weight: 400; }
+  .float-bar-text strong { font-weight: 700; }
+
+  .float-bar-btn {
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .float-bar-btn:hover { opacity: 0.85; }
+
+  /* ── MODAL ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,24,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    padding: 36px 36px 48px;
+    width: 100%;
+    max-width: 560px;
+    transform: translateY(40px);
+    transition: transform 0.35s cubic-bezier(0.34,1.2,0.64,1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .overlay.open .modal { transform: translateY(0); }
+
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 0 auto 28px;
+  }
+
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .modal .modal-sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .order-items {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .order-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .order-item:last-child { border-bottom: none; }
+  .order-item-img { font-size: 1.4rem; }
+  .order-item-name { font-weight: 500; flex: 1; }
+  .order-item-price { color: var(--muted); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .form-group input, .form-group textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--green-dark);
+  }
+  .form-full { grid-column: 1 / -1; }
+
+  .modal-send {
+    width: 100%;
+    margin-top: 20px;
+    background: var(--green-dark);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .modal-send:hover { opacity: 0.88; transform: scale(1.01); }
+
+  .modal-cancel {
+    width: 100%;
+    margin-top: 10px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .modal-cancel:hover { color: var(--ink); }
+
+  @media (max-width: 600px) {
+    header, .hero, .grid { padding-left: 20px; padding-right: 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal { padding: 28px 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Nutria <span>Vote</span></div>
+  <button class="cart-btn" onclick="openModal()">
+    View my order
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <h1>Your Menu</h1>
+  <p>Browse our products list and select what you'd like — then send us your order in one click.</p>
+</section>
+
+<div class="grid" id="productGrid"></div>
+
+<!-- Floating bar -->
+<div class="float-bar" id="floatBar">
+  <span class="float-bar-text"><strong id="floatCount">0</strong> item(s) selected</span>
+  <button class="float-bar-btn" onclick="openModal()">Review & Order →</button>
+</div>
+
+<!-- Modal overlay -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <h2>Your Order</h2>
+    <p class="modal-sub">Review your selection and tell us how to reach you.</p>
+
+    <div class="order-items" id="orderItems"></div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>First name</label>
+        <input type="text" id="fname" placeholder="Marie" />
+      </div>
+      <div class="form-group">
+        <label>Last name</label>
+        <input type="text" id="lname" placeholder="Dupont" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group form-full">
+        <label>Your email</label>
+        <input type="email" id="email" placeholder="marie@example.com" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group form-full">
+        <label>Message (optional)</label>
+        <textarea id="message" rows="3" placeholder="Any special requests or notes…"></textarea>
+      </div>
+    </div>
+
+    <button class="modal-send" onclick="sendOrder()">Send my order</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ─── PRODUCT DATA ───────────────────────────────────────────────
+// Edit this list to add/remove/change products!
+const products = [
+  { id: 1, tag: 'Meals', title: 'The Gnocchypnotic', sub: 'Oak Leaf Lettuce, Sweet Potato, Gnocchi, Scamorza Cheese, Pickled Red Onions, Cooked Ham, Chives', img: 'Images/Mister-1.jpg'},
+  { id: 2, tag: 'Meals', title: 'The Olive & Tune', sub: 'Rice, Spinach, Tuna, Corn, Tomato Tartare, Hard-boiled Egg, Olives, Seed Mix', img: 'Images/Mister-2.jpg'},
+  { id: 3, tag: 'Meals', title: 'The Splendiberian', sub: 'Pasta, Lamb Lettuce, Lomo, Mozzarella, Cucumber, Cherry Tomatoes, Avocado, Chives', img: 'Images/Mister-3.jpg'},
+  { id: 4, tag: 'Meals', title: 'The Ceasaradiant', sub: 'Pasta, Chicken With Oregano, Cherry Tomatoes, Hard-boiled Egg, Quattrocento, Avocado, Croutons', img: 'Images/Mister-4.jpg'},
+  { id: 5, tag: 'Meals', title: 'The Falafexcellent', sub: 'Quinoa, Spinach, Falafels, Hummus, Sun-dried Tomatoes, Feta, Roasted Carrots, Basil', img: 'Images/Mister-5.jpg'},
+  { id: 6, tag: 'Meals', title: 'The Perigourdivine', sub: 'Rice, Endives, Chicken Gizzards, Green Beans, Emmental Cheese, Mushrooms With Garlic And Parsley, Red Onions, Parsley', img: 'Images/Mister-6.jpg'},
+  { id: 8, tag: 'Snacks', title: 'Barebells Peanut Butter', sub: 'Soft, peanut butter-flavored nougat with crunchy peanut pieces, layered with smooth peanut butter, topped with crispy rice bits, all coated in milk chocolate. 20 grams of protein. No added sugar.', img: 'Images/BB-1.png'},
+  { id: 9, tag: 'Snacks', title: 'Barebells Salty Peanut', sub: 'Smooth milk chocolate laced with crunchy, golden peanuts. 20 grams of protein. No added sugar.', img: 'Images/BB-2.png'},
+  { id: 10, tag: 'Snacks', title: 'Barebells Cookies & Cream', sub: 'Soft and creamy cookie-dough core covered in sweet milk chocolate and crunchy cookie crispies. 20 grams of protein. No added sugar.', img: 'Images/BB-3.png'},
+  { id: 11, tag: 'Snacks', title: 'Barebells Creamy Crisp', sub: 'Smooth, caramel-filled bar covered in chocolate and topped with puffy crisps. 20 grams of protein. No added sugar.', img: 'Images/BB-4.png'},
+  { id: 12, tag: 'Snacks', title: 'Barebells White Chocolate Almond', sub: 'Rich and gooey caramel center coated in creamy white chocolate and topped with pieces of crunchy delicious almonds. 20 grams of protein. No added sugar.', img: 'Images/BB-5.png'},
+  { id: 13, tag: 'Snacks', title: 'Clif Chocolate Chip', sub: 'Made with organic rolled oats and chocolate chips, Chocolate Chip CLIF BAR evokes memories of fresh, warm chocolate chip cookies straight from the oven.', img: 'Images/Clif-1.png.webp'},
+  { id: 14, tag: 'Snacks', title: 'Clif White Chocolate Macadamia Nut', sub: 'Made with organic rolled oats, macadamia nuts, and 9 grams of protein.', img: 'Images/Clif-2.png.webp'},
+  { id: 15, tag: 'Snacks', title: 'Clif Crunchy Peanut Butter', sub: 'With organic rolled oats, crunchy, craveable peanuts, and 11 grams of protein, Crunchy Peanut Butter CLIF BAR helps deliver the long-lasting energy you need to get going.', img: 'Images/Clif-3.png.webp'},
+  { id: 16, tag: 'Snacks', title: 'Clif Chocolate Brownie', sub: 'Chocolate Brownie CLIF BAR is made with organic rolled oats and 10 grams of protein to help deliver the sustained energy you need before or during your favorite activities.', img: 'Images/Clif-4.png.webp'},
+  { id: 17, tag: 'Snacks', title: 'Clif Oatmeal Raisin Walnut', sub: 'Made with 10 grams of protein and organic rolled oats, the taste of the Oatmeal Raisin Walnut CLIF BAR is plump, organic raisins paired with sweet cinnamon and crunchy walnuts.', img: 'Images/Clif-5.png.webp'},
+  { id: 18, tag: 'Snacks', title: 'Clif Cool Mint Chocolate', sub: 'With a creamy drizzle topping, refreshing mint, rich chocolate, 10 grams of protein, and a boost of caffeine, Cool Mint Chocolate CLIF BAR helps fight off hunger while powering you through long days.', img: 'Images/Clif-6.png.webp'},
+  { id: 19, tag: 'Snacks', title: 'Clif Peanut Butter Banana', sub: 'Made with organic peanut butter, rich dark chocolate, dried bananas, and crunchy peanuts, this Peanut Butter Banana with Dark Chocolate CLIF BAR has 10 grams of protein to help you go the distance.', img: 'Images/Clif-7.png.webp'},
+  { id: 20, tag: 'Snacks', title: 'Clif Blueberry Almond Crisp', sub: 'The classic flavor of a blueberry crisp, packed into one energy bar with 11 grams of protein. Blueberry Almond Crisp CLIF BAR is made with organic rolled oats, almonds, and dried blueberries.', img: 'Images/Clif-8.png.webp'},
+  { id: 21, tag: 'Snacks', title: 'Clif Chocolate Chip Peanut Crunch', sub: ' Sweet chocolate chips meet crunchy peanuts in Chocolate Chip Peanut Crunch CLIF BAR. Made with organic rolled oats, peanut butter, peanuts and chocolate.', img: 'Images/Clif-9.png.webp'},
+  { id: 22, tag: 'Snacks', title: 'Clif Cookie & Creme', sub: 'Made with organic rolled oats, delicious cocoa, and 11 grams of protein per bar, the Cookies & Creme CLIF BAR is a sweet way to fuel your active adventures.', img: 'Images/Clif-10.jpg.webp'},
+  { id: 23, tag: 'Snacks', title: 'Fresh Seasonal Fruit Salad', sub: 'Fruit salad made with fresh seasonal fruits. The fruits change depending on the season and the availability.', img: 'Images/Mister-8.png'},
+  { id: 24, tag: 'Snacks', title: 'Red Berry Yogurt', sub: 'Greek yogurt, overlooked by a fresh red berry sauce, with a crunch of muesli.', img: 'Images/Mister-9.png'},
+  { id: 25, tag: 'Snacks', title: 'Salted Caramel Rice Pudding', sub: 'Rice pudding mixed with melted salted caramel, sprinkled with toasted hazelnuts.', img: 'Images/Mister-10.png'},
+  { id: 26, tag: 'Snacks', title: 'Caramelized Apples Crumble', sub: 'Caramelized apples with a crumble on top.', img: 'Images/Mister-11.png'},
+  { id: 27, tag: 'Snacks', title: 'Coconut Mango Purée', sub: 'Coconut milk mixed with mango purée and a handful of chia seeds.', img: 'Images/Mister-12.png'},
+  { id: 28, tag: 'Snacks', title: 'Dulce de Leche Cookie', sub: 'Handmade cookie with Dulce de Leche (melted mix of milk and sugar) chips. Collaboration between Mister Garden and La Fabrique Cookies.', img: 'Images/Mister-13.png'},
+  { id: 29, tag: 'Snacks', title: 'Dark Chocolate Chip Cookie', sub: 'Handmade cookie with dark chocolate chips. Collaboration between Mister Garden and La Fabrique Cookies.', img: 'Images/Mister-14.png'},
+  { id: 30, tag: 'Snacks', title: 'Isey Skyr Caramel', sub: 'Icelandic skyr mixed with caramel. High in protein. Low added sugar. Lactose Free. Gluten Free', img: 'Images/Isey-1.png'},
+  { id: 31, tag: 'Snacks', title: 'Isey Skyr Peach', sub: 'Icelandic skyr mixed with peaches. High in protein. Low added sugar. Lactose Free. Gluten Free', img: 'Images/Isey-2.png'},
+  { id: 32, tag: 'Snacks', title: 'Isey Skyr Cheesecake Mandarin', sub: 'Icelandic skyr mixed with mandarin and cheesecake flavor. High in protein. Low added sugar. Lactose Free. Gluten Free.', img: 'Images/Isey-3.png'},
+  { id: 33, tag: 'Snacks', title: 'Isey Skyr Vanilla', sub: 'Icelandic skyr mixed with vanilla flavor. High in protein. Low added sugar. Lactose Free. Gluten Free.', img: 'Images/Isey-4.png'},
+  { id: 34, tag: 'Snacks', title: 'Isey Skyr Raspberry Pomegranate', sub: 'Icelandic skyr mixed with raspberries and pomegranate guice. High in protein. Low added sugar. Lactose Free. Gluten Free.', img: 'Images/Isey-5.png'},
+  { id: 35, tag: 'Drinks', title: 'MP Magnetic Juice Peach & Cherry', sub: '330 ml - Sparkling water, 4-fruit juice made from concentrates (peach, lemon, apple, cherry), sugar, concentrated carrot juice, natural fruit flavors', img: 'Images/MP-1.png.webp'},
+  { id: 36, tag: 'Drinks', title: 'MP Magnetic Juice Strawberry & Kiwi', sub: '330 ml - Sparkling water, 4-fruit juice made from concentrates (apple, strawberry, kiwi, lemon), sugar, concentrated black carrot juice, natural fruit flavors', img: 'Images/MP-2.png.webp'},
+  { id: 37, tag: 'Drinks', title: 'MP Magnetic Juice Pineapple & Mango', sub: '330 ml - Sparkling water, 4-fruit juice made from concentrates (pineapple, mango, apple, lemon), sugar, concentrated carrot and pumpkin juice, natural fruit flavors', img: 'Images/MP-3.png.webp'},
+  { id: 38, tag: 'Drinks', title: 'MP Magnetic Juice Lemon & Guava', sub: '330 ml - Sparkling water, 3-fruit juice made from concentrates (apple, lemon, guava), sugar, concentrated carrot juice, natural fruit flavors', img: 'Images/MP-4.png.webp'},
+  { id: 39, tag: 'Drinks', title: 'MP Forever Lemon', sub: '330 ml - A sparkling beverage made with carbonated water and flavored with natural flavors; 0 sugars, 0 calories.', img: 'Images/MP-5.png.webp'},
+  { id: 40, tag: 'Drinks', title: 'MP Forever Lime', sub: '330 ml - A sparkling beverage made with carbonated water with natural lemon and lime flavors; 0 sugars, 0 calories.', img: 'Images/MP-6.png.webp'},
+  { id: 41, tag: 'Drinks', title: 'MP Chic Citrus Fizz', sub: '330 ml - Sparkling water, concentrated lemon juice, liquid sugar, salt, natural lemon flavor', img: 'Images/MP-7.png.webp'},
+  { id: 42, tag: 'Drinks', title: 'MP Chic Roséllini', sub: '330 ml - Sparkling water, concentrated peach juice, liquid sugar, acidifier: citric acid, caramel syrup, concentrated purple carrot and blackcurrant juices, natural peach flavor', img: 'Images/MP-8.png.webp'},
+  { id: 43, tag: 'Drinks', title: 'MP Chic Lemonjito', sub: '330 ml - Sparkling water, concentrated lemon juice, liquid sugar, salt, natural lemon flavor', img: 'Images/MP-9.png.webp'},
+  { id: 44, tag: 'Drinks', title: 'Innocent Strawberry Banana Apple', sub: '250 ml, juiced apples, mashed strawberries, mashed bananas, juiced white grapes, juiced orange, mashed blackcurrants, a splash of juiced beetroot', img: 'Images/Innocent-1.png.webp'},
+  { id: 45, tag: 'Drinks', title: 'Innocent Pineapple Banana Coco', sub: '250 ml, juiced pineapple, mashed bananas, juiced apple, juiced orange, creamy coconut milk, and a little lemon juice', img: 'Images/Innocent-2.png.webp'},
+  { id: 46, tag: 'Drinks', title: 'Innocent Kiwi Apple Ananas', sub: '250 ml, Juice from apples, pineapple, mashed kiwi, lime, white grapes, a little spirulina and safflower extract', img: 'Images/Innocent-3.png.webp'},
+  { id: 47, tag: 'Drinks', title: 'Innocent Mango Passion Apple', sub: '250 ml, juiced apples, mashed mangoes, mashed bananas, juiced orange, mashed passion fruit, mashed peach, a squeeze of lime', img: 'Images/Innocent-4.png.webp'},
+  { id: 48, tag: 'Drinks', title: 'Innocent Lemon Cucumber Apple Spinach', sub: '250 ml, pressed apples, mashed bananas, mashed zucchini, chayote puree, mashed white guava, mashed cucumber, squeezed lemon, apple juice, mandarin pulp, spinach puree, spirulina/turmeric/spearmint extracts', img: 'Images/Innocent-5.png.webp' },
+  { id: 49, tag: 'Drinks', title: 'Innocent Cherry Beetroot Apple Spinach', sub: '250 ml, pressed apples, mashed bananas, chayote puree, pressed beet, pressed carrot, mashed cucumber, squeezed lemon, crushed sour cherries, apple juice, mandarin pulp, spinach puree, beetroot and carrot.', img: 'Images/Innocent-6.png.webp' },
+  { id: 50, tag: 'Drinks', title: 'HiPRO Protein Shake', sub: '330 ml, 25g of proteins, 0% fat, magnesium, B9 vitamin', img: 'Images/Hipro-choc.jpg'},
+  { id: 51, tag: 'Drinks', title: 'HiPRO Protein Shake', sub: '330 ml, 25g of proteins, 0% fat, magnesium, B9 vitamin', img: 'Images/Hipro-van.jpg'},
+  { id: 52, tag: 'Drinks', title: 'HiPRO Protein Shake', sub: '330 ml, 25g of proteins, 0% fat, magnesium, B9 vitamin', img: 'Images/Hipro-latte.jpg'},
+  { id: 53, tag: 'Drinks', title: 'HiPRO Protein Shake', sub: '330 ml, 25g of proteins, 0% fat, magnesium, B9 vitamin', img: 'Images/Hipro-cara.jpg'},
+    
+];
+
+// ─── YOUR EMAIL ─────────────────────────────────────────────────
+// Replace with your actual email address!
+const YOUR_EMAIL = "kevin.baric@essec.edu";
+
+// ────────────────────────────────────────────────────────────────
+
+let selected = new Set();
+
+function renderGrid() {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = products.map(p => `
+    <div class="card ${selected.has(p.id) ? 'selected' : ''}" id="card-${p.id}" onclick="toggleProduct(${p.id})">
+      <div class="card-check">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <polyline points="2,7 5.5,10.5 12,3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="card-img-placeholder" style="background:${tagColor(p.tag)}">${p.img}</div>
+      <div class="card-body">
+        <div class="card-tag">${p.tag}</div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-sub">${p.sub}</div>
+
+      </div>
+    </div>
+  `).join('');
+}
+
+function tagColor(tag) {
+  const map = {
+    Meals: '#1a3d2b', Drinks: '#1a3d2b', Snacks: '#1a3d2b',
+  };
+  return map[tag] || '#fff';
+}
+
+function toggleProduct(id) {
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  updateUI();
+}
+
+function updateUI() {
+  renderGrid();
+  const count = selected.size;
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('floatCount').textContent = count;
+
+  const bar = document.getElementById('floatBar');
+  if (count > 0) bar.classList.add('visible');
+  else bar.classList.remove('visible');
+
+  // pop animation on count badge
+  const badge = document.getElementById('cartCount');
+  badge.classList.add('pop');
+  setTimeout(() => badge.classList.remove('pop'), 200);
+}
+
+function buildOrderItems() {
+  const container = document.getElementById('orderItems');
+  const items = products.filter(p => selected.has(p.id));
+  container.innerHTML = items.map(p => `
+    <div class="order-item">
+      <span class="order-item-name">${p.title}</span>
+    </div>
+  `).join('');
+}
+
+function openModal() {
+  if (selected.size === 0) return;
+  buildOrderItems();
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+function sendOrder() {
+  const fname = document.getElementById('fname').value.trim();
+  const lname = document.getElementById('lname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!fname || !email) {
+    alert('Please enter your first name and email address.');
+    return;
+  }
+
+  const items = products.filter(p => selected.has(p.id));
+  const itemLines = items.map(p => `• ${p.title} — ${p.price}`).join('\n');
+
+  const subject = `New Order from ${fname} ${lname}`;
+  const body = [
+    `Hello,`,
+    ``,
+    `You have received a new order:`,
+    ``,
+    `━━━━━━━━━━━━━━━━`,
+    `CUSTOMER`,
+    `Name: ${fname} ${lname}`,
+    `Email: ${email}`,
+
+    ``,
+    `ITEMS ORDERED`,
+    itemLines,
+    ``,
+    message ? `MESSAGE\n${message}` : null,
+    `━━━━━━━━━━━━━━━━`,
+  ].filter(l => l !== null).join('\n');
+
+  const mailtoLink = `mailto:${YOUR_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoLink;
+}
+
+// Init
+renderGrid();
+</script>
+</body>
+</html>
